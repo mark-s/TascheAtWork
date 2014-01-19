@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TascheAtWork.Shell", "TascheAtWork.Shell\TascheAtWork.Shell.csproj", "{452EC7DE-D1BD-4586-834A-3F0F8C3B29D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TascheAtWork.Core", "TascheAtWork.Core\TascheAtWork.Core.csproj", "{2DB6261B-5F17-4DEF-8429-610566A079DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{CD9478D3-31CA-4CD4-BC7C-7D632A613551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TascheAtWork.PocketAPI", "TascheAtWork.PocketAPI\TascheAtWork.PocketAPI.csproj", "{565733F2-3166-4931-9080-77E427A83A10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{452EC7DE-D1BD-4586-834A-3F0F8C3B29D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{452EC7DE-D1BD-4586-834A-3F0F8C3B29D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{452EC7DE-D1BD-4586-834A-3F0F8C3B29D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{452EC7DE-D1BD-4586-834A-3F0F8C3B29D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB6261B-5F17-4DEF-8429-610566A079DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB6261B-5F17-4DEF-8429-610566A079DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB6261B-5F17-4DEF-8429-610566A079DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB6261B-5F17-4DEF-8429-610566A079DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{565733F2-3166-4931-9080-77E427A83A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{565733F2-3166-4931-9080-77E427A83A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{565733F2-3166-4931-9080-77E427A83A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{565733F2-3166-4931-9080-77E427A83A10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+	EndGlobalSection
+EndGlobal
