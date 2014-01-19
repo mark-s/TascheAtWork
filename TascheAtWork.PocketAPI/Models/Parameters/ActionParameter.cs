@@ -9,7 +9,7 @@ namespace TascheAtWork.PocketAPI.Models.Parameters
   /// All parameters which can be passed for a modify action
   /// </summary>
   [DataContract]
-  internal class ActionParameter
+  public class ActionParameter
   {
     /// <summary>
     /// Gets or sets the action.

@@ -8,7 +8,7 @@ namespace TascheAtWork.PocketAPI.Models.Response
   /// Item Response
   /// </summary>
   [JsonObject]
-  internal class Retrieve : ResponseBase
+  internal class RetrieveResponse : ResponseBase
   {
     /// <summary>
     /// Gets or sets the complete.

@@ -1,13 +1,8 @@
-﻿using System.Threading.Tasks;
-using TascheAtWork.PocketAPI.Models;
-using TascheAtWork.PocketAPI.Models.Parameters;
+﻿using TascheAtWork.PocketAPI.Models;
 
-namespace TascheAtWork.PocketAPI
+namespace TascheAtWork.PocketAPI.Interfaces
 {
-    /// <summary>
-    /// PocketClient
-    /// </summary>
-    public partial class ClientCore
+    public interface IHandleModify
     {
         /// <summary>
         /// Archives the specified item.
@@ -15,11 +10,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Archive(int itemID)
-        {
-            return SendDefault(itemID, "archive");
-        }
-
+        bool Archive(int itemID);
 
         /// <summary>
         /// Archives the specified item.
@@ -27,11 +18,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="item">The item.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Archive(PocketItem item)
-        {
-            return Archive(item.ID);
-        }
-
+        bool Archive(PocketItem item);
 
         /// <summary>
         /// Un-archives the specified item (alias for Readd).
@@ -39,11 +26,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Unarchive(int itemID)
-        {
-            return SendDefault(itemID, "readd");
-        }
-
+        bool Unarchive(int itemID);
 
         /// <summary>
         /// Unarchives the specified item.
@@ -51,11 +34,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="item">The item.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Unarchive(PocketItem item)
-        {
-            return Unarchive(item.ID);
-        }
-
+        bool Unarchive(PocketItem item);
 
         /// <summary>
         /// Favorites the specified item.
@@ -63,11 +42,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Favorite(int itemID)
-        {
-            return SendDefault(itemID, "favorite");
-        }
-
+        bool Favorite(int itemID);
 
         /// <summary>
         /// Favorites the specified item.
@@ -75,11 +50,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="item">The item.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Favorite(PocketItem item)
-        {
-            return Favorite(item.ID);
-        }
-
+        bool Favorite(PocketItem item);
 
         /// <summary>
         /// Un-favorites the specified item.
@@ -87,11 +58,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Unfavorite(int itemID)
-        {
-            return SendDefault(itemID, "unfavorite");
-        }
-
+        bool Unfavorite(int itemID);
 
         /// <summary>
         /// Un-favorites the specified item.
@@ -99,11 +66,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="item">The item.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Unfavorite(PocketItem item)
-        {
-            return Unfavorite(item.ID);
-        }
-
+        bool Unfavorite(PocketItem item);
 
         /// <summary>
         /// Deletes the specified item.
@@ -111,36 +74,14 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public bool Delete(int itemID)
-        {
-            return SendDefault(itemID, "delete");
-        }
-
+        bool Delete(int itemID);
 
         /// <summary>
         /// Deletes the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        public bool Delete(PocketItem item)
-        {
-            return Delete(item.ID);
-        }
+        bool Delete(PocketItem item);
 
-
-        /// <summary>
-        /// Puts an action
-        /// </summary>
-        /// <param name="itemID">The item ID.</param>
-        /// <param name="action">The action.</param>
-        /// <returns></returns>
-        protected bool SendDefault(int itemID, string action)
-        {
-            return Send(new ActionParameter()
-            {
-                Action = action,
-                ID = itemID
-            });
-        }
     }
 }

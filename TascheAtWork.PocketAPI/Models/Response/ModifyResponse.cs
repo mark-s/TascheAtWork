@@ -6,7 +6,7 @@ namespace TascheAtWork.PocketAPI.Models.Response
   /// Modify Response
   /// </summary>
   [JsonObject]
-  internal class Modify : ResponseBase
+  internal class ModifyResponse : ResponseBase
   {
     /// <summary>
     /// Gets or sets the action results.

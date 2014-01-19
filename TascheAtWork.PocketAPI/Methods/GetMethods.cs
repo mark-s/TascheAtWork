@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using TascheAtWork.PocketAPI.Interfaces;
 using TascheAtWork.PocketAPI.Models;
 using TascheAtWork.PocketAPI.Models.Parameters;
 using TascheAtWork.PocketAPI.Models.Response;
 
-namespace TascheAtWork.PocketAPI
+namespace TascheAtWork.PocketAPI.Methods
 {
     /// <summary>
     /// PocketClient
     /// </summary>
-    public partial class ClientCore
+    public class GetMethods : IHandleGet
     {
+        private readonly IInternalAPI _client;
+
+
+        public GetMethods(IInternalAPI client)
+        {
+            _client = client;
+        }
+
+
         /// <summary>
         /// Retrieves items from pocket
         /// with the given filters
@@ -29,7 +38,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public List<PocketItem> Get(
+        public List<PocketItem> GetItems(
             State? state = null,
             bool? favorite = null,
             string tag = null,
@@ -57,7 +66,7 @@ namespace TascheAtWork.PocketAPI
                 Offset = offset
             };
 
-            Retrieve response = Request<Retrieve>("get", parameters.ConvertToHTTPPostParameters());
+            RetrieveResponse response = _client.Request<RetrieveResponse>("get", parameters.ConvertToHTTPPostParameters());
 
             return response.Items;
         }
@@ -70,9 +79,9 @@ namespace TascheAtWork.PocketAPI
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public PocketItem Get(int itemID)
+        public PocketItem GetItem(int itemID)
         {
-            List<PocketItem> items = Get(
+            List<PocketItem> items = GetItems(
                 state: State.all
                 );
 
@@ -86,7 +95,7 @@ namespace TascheAtWork.PocketAPI
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
         /// <exception cref="PocketException"></exception>
-        public List<PocketItem> Get(RetrieveFilter filter)
+        public List<PocketItem> GetItems(RetrieveFilter filter)
         {
             RetrieveParameters parameters = new RetrieveParameters();
 
@@ -117,7 +126,7 @@ namespace TascheAtWork.PocketAPI
 
             parameters.DetailType = DetailType.complete;
 
-            Retrieve response = Request<Retrieve>("get", parameters.ConvertToHTTPPostParameters());
+            RetrieveResponse response = _client.Request<RetrieveResponse>("get", parameters.ConvertToHTTPPostParameters());
 
             return response.Items;
         }
@@ -131,7 +140,7 @@ namespace TascheAtWork.PocketAPI
         /// <exception cref="PocketException"></exception>
         public List<PocketTag> GetTags()
         {
-            List<PocketItem> items = Get(
+            List<PocketItem> items = GetItems(
                 state: State.all
                 );
 
@@ -151,7 +160,7 @@ namespace TascheAtWork.PocketAPI
         /// <exception cref="PocketException"></exception>
         public List<PocketItem> SearchByTag(string tag)
         {
-            return Get(tag: tag);
+            return GetItems(tag: tag);
         }
 
 
@@ -164,7 +173,7 @@ namespace TascheAtWork.PocketAPI
         /// <exception cref="PocketException"></exception>
         public List<PocketItem> Search(string searchString, bool searchInUri = true)
         {
-            List<PocketItem> items = Get(RetrieveFilter.All);
+            List<PocketItem> items = GetItems(RetrieveFilter.All);
 
             return Search(items, searchString);
         }
@@ -190,47 +199,5 @@ namespace TascheAtWork.PocketAPI
                 || item.Uri.ToString().ToLower().Contains(searchString)
                 )).ToList();
         }
-    }
-
-
-    /// <summary>
-    /// Filter for simple retrieve requests
-    /// </summary>
-    public enum RetrieveFilter
-    {
-        /// <summary>
-        /// All types
-        /// </summary>
-        All,
-
-        /// <summary>
-        /// Only unread items
-        /// </summary>
-        Unread,
-
-        /// <summary>
-        /// Archived items
-        /// </summary>
-        Archive,
-
-        /// <summary>
-        /// Favorited items
-        /// </summary>
-        Favorite,
-
-        /// <summary>
-        /// Only articles
-        /// </summary>
-        Article,
-
-        /// <summary>
-        /// Only videos
-        /// </summary>
-        Video,
-
-        /// <summary>
-        /// Only images
-        /// </summary>
-        Image
     }
 }

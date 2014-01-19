@@ -6,7 +6,7 @@ namespace TascheAtWork.PocketAPI.Models.Response
   /// Request Code
   /// </summary>
   [JsonObject]
-  internal class RequestCode
+  internal class RequestCodeResponse
   {
     /// <summary>
     /// Gets or sets the code.

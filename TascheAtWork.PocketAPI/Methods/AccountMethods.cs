@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using TascheAtWork.PocketAPI.Interfaces;
 using TascheAtWork.PocketAPI.Models;
 using TascheAtWork.PocketAPI.Models.Parameters;
 using TascheAtWork.PocketAPI.Models.Response;
 
-namespace TascheAtWork.PocketAPI
+namespace TascheAtWork.PocketAPI.Methods
 {
     /// <summary>
     /// PocketClient
     /// </summary>
-    public partial class ClientCore
+    public class AccountMethods : IHandleAccounts
     {
+        private readonly IInternalAPI _client;
+        private readonly IPocketAPISession _sessionData;
+
+        public AccountMethods(IInternalAPI client, IPocketAPISession sessionData)
+        {
+            _client = client;
+            _sessionData = sessionData;
+        }
+
         /// <summary>
         /// Retrieves the requestCode from Pocket, which is used to generate the Authentication URI to authenticate the user
         /// </summary>
@@ -21,22 +31,22 @@ namespace TascheAtWork.PocketAPI
         public string GetRequestCode()
         {
             // check if request code is available
-            if (CallbackUri == null)
+            if (_sessionData.AuthenticationCallbackUri == null)
             {
                 throw new NullReferenceException("Authentication methods need a callbackUri on initialization of the PocketClient class");
             }
 
             // do request
-            RequestCode response = Request<RequestCode>("oauth/request", new Dictionary<string, string>()
+            RequestCodeResponse response = _client.Request<RequestCodeResponse>("oauth/request", new Dictionary<string, string>()
             {
-                {"redirect_uri", CallbackUri}
+                {"redirect_uri", _sessionData.AuthenticationCallbackUri}
             }, false);
 
             // save code to client
-            RequestCode = response.Code;
+            _sessionData.RequestCode = response.Code;
 
             // generate redirection URI and return
-            return RequestCode;
+            return _sessionData.RequestCode;
         }
 
 
@@ -49,18 +59,16 @@ namespace TascheAtWork.PocketAPI
         public Uri GenerateAuthenticationUri(string requestCode = null)
         {
             // check if request code is available
-            if (RequestCode == null && requestCode == null)
+            if (_sessionData.RequestCode == null && requestCode == null)
             {
                 throw new NullReferenceException("Call GetRequestCode() first to receive a request_code");
             }
 
             // override property with given param if available
             if (requestCode != null)
-            {
-                RequestCode = requestCode;
-            }
+                _sessionData.RequestCode = requestCode;
 
-            return new Uri(string.Format(authentificationUri, RequestCode, CallbackUri));
+            return new Uri(string.Format(_sessionData.AuthentificationUri, _sessionData.RequestCode, _sessionData.AuthenticationCallbackUri));
         }
 
 
@@ -74,7 +82,7 @@ namespace TascheAtWork.PocketAPI
         public PocketUser GetUser(string requestCode = null)
         {
             // check if request code is available
-            if (RequestCode == null && requestCode == null)
+            if (_sessionData.RequestCode == null && requestCode == null)
             {
                 throw new NullReferenceException("Call GetRequestCode() first to receive a request_code");
             }
@@ -82,17 +90,17 @@ namespace TascheAtWork.PocketAPI
             // override property with given param if available
             if (requestCode != null)
             {
-                RequestCode = requestCode;
+                _sessionData.RequestCode = requestCode;
             }
 
             // do request
-            PocketUser response = Request<PocketUser>("oauth/authorize", new Dictionary<string, string>()
+            PocketUser response = _client.Request<PocketUser>("oauth/authorize", new Dictionary<string, string>()
             {
-                {"code", RequestCode}
+                {"code", _sessionData.RequestCode}
             }, false);
 
             // save code to client
-            AccessCode = response.Code;
+            _sessionData.AccessCode = response.Code;
 
             return response;
         }
@@ -147,7 +155,7 @@ namespace TascheAtWork.PocketAPI
                 Password = password
             };
 
-            ResponseBase response = Request<ResponseBase>("signup", parameters.ConvertToHTTPPostParameters(), false);
+            ResponseBase response = _client.Request<ResponseBase>("signup", parameters.ConvertToHTTPPostParameters(), false);
 
             return response.Status;
         }

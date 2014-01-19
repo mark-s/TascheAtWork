@@ -3,10 +3,10 @@
 namespace TascheAtWork.PocketAPI.Models.Response
 {
   /// <summary>
-  /// Add Response
+  /// AddResponse Response
   /// </summary>
   [JsonObject]
-  internal class Add : ResponseBase
+  internal class AddResponse : ResponseBase
   {
     /// <summary>
     /// Gets or sets the item.

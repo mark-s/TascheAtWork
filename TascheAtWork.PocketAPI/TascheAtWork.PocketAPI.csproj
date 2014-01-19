@@ -52,14 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientCore.cs" />
-    <Compile Include="Components\Account.cs" />
-    <Compile Include="Components\Add.cs" />
-    <Compile Include="Components\Get.cs" />
-    <Compile Include="Components\Modify.cs" />
-    <Compile Include="Components\ModifyTags.cs" />
-    <Compile Include="Components\Statistics.cs" />
-    <Compile Include="IPocketClient.cs" />
+    <Compile Include="PocketAPIClient.cs" />
+    <Compile Include="Interfaces\IHandleAccounts.cs" />
+    <Compile Include="Interfaces\IHandleAdd.cs" />
+    <Compile Include="Interfaces\IHandleGet.cs" />
+    <Compile Include="Interfaces\IHandleModify.cs" />
+    <Compile Include="Interfaces\IHandleModifyTags.cs" />
+    <Compile Include="Interfaces\IHandleStatistics.cs" />
+    <Compile Include="Interfaces\IInternalAPI.cs" />
+    <Compile Include="Interfaces\IPocketAPISession.cs" />
+    <Compile Include="Interfaces\IPocketClient.cs" />
+    <Compile Include="Methods\AccountMethods.cs" />
+    <Compile Include="Methods\AddMethods.cs" />
+    <Compile Include="Methods\GetMethods.cs" />
+    <Compile Include="Methods\ModifyMethods.cs" />
+    <Compile Include="Methods\ModifyTagMethods.cs" />
+    <Compile Include="Methods\Statistics.cs" />
     <Compile Include="Models\Parameters\ActionParameter.cs" />
     <Compile Include="Models\Parameters\AddParameters.cs" />
     <Compile Include="Models\Parameters\ModifyParameters.cs" />
@@ -75,15 +83,17 @@
     <Compile Include="Models\PocketTag.cs" />
     <Compile Include="Models\PocketUser.cs" />
     <Compile Include="Models\PocketVideo.cs" />
-    <Compile Include="Models\Response\Add.cs" />
-    <Compile Include="Models\Response\Modify.cs" />
-    <Compile Include="Models\Response\RequestCode.cs" />
+    <Compile Include="Models\Response\AddResponse.cs" />
+    <Compile Include="Models\Response\ModifyResponse.cs" />
+    <Compile Include="Models\Response\RequestCodeResponse.cs" />
     <Compile Include="Models\Response\ResponseBase.cs" />
-    <Compile Include="Models\Response\Retrieve.cs" />
+    <Compile Include="Models\Response\RetrieveResponse.cs" />
     <Compile Include="PocketException.cs" />
+    <Compile Include="PocketSessionData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\JsonExtensions.cs" />
     <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="RetrieveFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

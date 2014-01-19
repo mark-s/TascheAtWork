@@ -5,71 +5,58 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using TascheAtWork.PocketAPI.Helpers;
+using TascheAtWork.PocketAPI.Interfaces;
+using TascheAtWork.PocketAPI.Methods;
+using TascheAtWork.PocketAPI.Models;
 using TascheAtWork.PocketAPI.Models.Parameters;
 using TascheAtWork.PocketAPI.Models.Response;
 
 namespace TascheAtWork.PocketAPI
 {
-    public partial class ClientCore :IPocketClient
+    public class PocketAPIClient : IPocketClient, IInternalAPI
     {
-
-        /// <summary>
-        /// REST client used for the API communication
-        /// </summary>
+        private readonly IPocketAPISession _pocketSession = new PocketSessionData();
         private readonly HttpClient _webClient;
+
+        private readonly IHandleAdd _addMethods;
+        private readonly IHandleAccounts _accountMethods;
+        private readonly IHandleGet _getMethods;
+        private readonly IHandleModify _modifyMethods;
+        private readonly IHandleModifyTags _modifyTagMethods;
 
         /// <summary>
         /// Caches HTTP headers from last response
         /// </summary>
-        private HttpResponseHeaders _lastHeaders;
+        private HttpResponseHeaders _cachedHeaders;
 
         /// <summary>
         /// The base URL for the Pocket API
         /// </summary>
         private readonly Uri _pocketAPIBaseUri = new Uri("https://getpocket.com/v3/");
 
-        /// <summary>
-        /// The authentification URL
-        /// </summary>
-        protected string authentificationUri = "https://getpocket.com/auth/authorize?request_token={0}&redirect_uri={1}";
-
-        /// <summary>
-        /// callback URL for API calls
-        /// </summary>
-        public string CallbackUri { get; set; }
-
-        /// <summary>
-        /// Accessor for the Pocket API key
-        /// see: http://getpocket.com/developer
-        /// </summary>
-        public string PlatformConsumerKey { get; set; }
-
-        /// <summary>
-        /// Code retrieved on authentification
-        /// </summary>
-        public string RequestCode { get; set; }
-
-        /// <summary>
-        /// Code retrieved on authentification-success
-        /// </summary>
-        public string AccessCode { get; set; }
-
 
         /// <param name="platformConsumerKey">The API key</param>
         /// <param name="accessCode">Provide an access code if the user is already authenticated</param>
         /// <param name="callbackUri">The callback URL is called by Pocket after authentication</param>
-        public ClientCore(string platformConsumerKey, string accessCode = null, string callbackUri = null)
+        public PocketAPIClient(string platformConsumerKey, string accessCode = null, string callbackUri = null)
         {
+
+            _addMethods = new AddMethods(this);
+            _accountMethods = new AccountMethods(this, _pocketSession);
+            _getMethods = new GetMethods(this);
+            _modifyMethods = new ModifyMethods(this);
+            _modifyTagMethods = new ModifyTagMethods(this);
+
             // assign public properties
-            PlatformConsumerKey = platformConsumerKey;
+            _pocketSession.PlatformConsumerKey = platformConsumerKey;
 
             // assign access code if submitted
             if (accessCode != null)
-                AccessCode = accessCode;
+                _pocketSession.AccessCode = accessCode;
 
             // assign callback uri if submitted
             if (callbackUri != null)
-                CallbackUri = Uri.EscapeUriString(callbackUri);
+                _pocketSession.AuthenticationCallbackUri = Uri.EscapeUriString(callbackUri);
 
             var httpClientHandler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip };
 
@@ -87,7 +74,6 @@ namespace TascheAtWork.PocketAPI
 
         }
 
-
         /// <summary>
         /// Fetches a typed resource
         /// </summary>
@@ -97,9 +83,9 @@ namespace TascheAtWork.PocketAPI
         /// <param name="requireAuth">if set to <c>true</c> [require auth].</param>
         /// <returns></returns>
         /// <exception cref="PocketException">No access token available. Use authentification first.</exception>
-        protected T Request<T>(string method, Dictionary<string, string> parameters = null, bool requireAuth = true) where T : class, new()
+        public T Request<T>(string method, Dictionary<string, string> parameters = null, bool requireAuth = true) where T : class, new()
         {
-            if (requireAuth && AccessCode == null)
+            if (requireAuth && _pocketSession.AccessCode == null)
             {
                 throw new PocketException("SDK error: No access token available. Use authentification first.");
             }
@@ -114,12 +100,12 @@ namespace TascheAtWork.PocketAPI
             }
 
             // add consumer key to each request
-            parameters.Add("consumer_key", PlatformConsumerKey);
+            parameters.Add("consumer_key", _pocketSession.PlatformConsumerKey);
 
             // add access token (necessary for all requests except authentification)
-            if (AccessCode != null)
+            if (_pocketSession.AccessCode != null)
             {
-                parameters.Add("access_token", AccessCode);
+                parameters.Add("access_token", _pocketSession.AccessCode);
             }
 
             // content of the request
@@ -141,7 +127,7 @@ namespace TascheAtWork.PocketAPI
             ValidateResponse(response);
 
             // cache headers
-            _lastHeaders = response.Headers;
+            _cachedHeaders = response.Headers;
 
             // read response
             var responseString = response.Content.ReadAsStringAsync().Result;
@@ -165,14 +151,12 @@ namespace TascheAtWork.PocketAPI
             return parsedResponse;
         }
 
-
-
         /// <summary>
         /// Sends a list of actions
         /// </summary>
         /// <param name="actionParameters">The action parameters.</param>
         /// <returns></returns>
-        internal bool Send(List<ActionParameter> actionParameters)
+        public bool Send(List<ActionParameter> actionParameters)
         {
             List<Dictionary<string, object>> actionParamList = new List<Dictionary<string, object>>();
 
@@ -183,23 +167,21 @@ namespace TascheAtWork.PocketAPI
 
             Dictionary<string, string> parameters = new Dictionary<string, string>() { { "actions", JsonConvert.SerializeObject(actionParamList) } };
 
-            Modify response = Request<Modify>("send", parameters);
+            ModifyResponse response = Request<ModifyResponse>("send", parameters);
 
             return response.Status;
         }
-
 
         /// <summary>
         /// Sends an action
         /// </summary>
         /// <param name="actionParameter">The action parameter.</param>
         /// <returns></returns>
-        internal bool Send(ActionParameter actionParameter)
+        public bool Send(ActionParameter actionParameter)
         {
             bool response = Send(new List<ActionParameter>() { actionParameter });
             return response;
         }
-
 
         /// <summary>
         /// Validates the response.
@@ -250,7 +232,6 @@ namespace TascheAtWork.PocketAPI
             throw exception;
         }
 
-
         /// <summary>
         /// Tries to fetch a header value.
         /// </summary>
@@ -279,6 +260,193 @@ namespace TascheAtWork.PocketAPI
             }
 
             return result;
+        }
+
+        public string CallbackUri { get { return _pocketSession.AuthenticationCallbackUri; } set { _pocketSession.AuthenticationCallbackUri = value; } }
+        public string PlatformConsumerKey { get { return _pocketSession.PlatformConsumerKey; } set { _pocketSession.PlatformConsumerKey = value; } }
+        public string RequestCode { get { return _pocketSession.RequestCode; } set { _pocketSession.RequestCode = value; } }
+        public string AccessCode { get { return _pocketSession.AccessCode; } set { _pocketSession.AccessCode = value; } }
+        public string GetRequestCode()
+        {
+            return _accountMethods.GetRequestCode();
+        }
+
+        public Uri GenerateAuthenticationUri(string requestCode = null)
+        {
+            return _accountMethods.GenerateAuthenticationUri(requestCode);
+        }
+
+        public PocketUser GetUser(string requestCode = null)
+        {
+            return _accountMethods.GetUser(requestCode);
+        }
+
+        public bool RegisterAccount(string username, string email, string password)
+        {
+            return _accountMethods.RegisterAccount(username, email, password);
+        }
+
+        public PocketItem AddItem(Uri uri, string[] tags = null, string title = null, string tweetID = null)
+        {
+            return _addMethods.AddItem(uri, tags, title, tweetID);
+        }
+
+        public List<PocketItem> GetItems(State? state = null, bool? favorite = null,
+                                                        string tag = null, ContentType? contentType = null, Sort? sort = null,
+                                                        string search = null, string domain = null, DateTime? since = null,
+                                                        int? count = null, int? offset = null)
+        {
+            return _getMethods.GetItems(state, favorite, tag, contentType, sort, search, domain, since, count, offset);
+        }
+
+        public PocketItem GetItem(int itemID)
+        {
+            return _getMethods.GetItem(itemID);
+        }
+
+        public List<PocketItem> GetItems(RetrieveFilter filter)
+        {
+            return _getMethods.GetItems(filter);
+        }
+
+        public List<PocketTag> GetTags()
+        {
+            return _getMethods.GetTags();
+        }
+
+        public List<PocketItem> SearchByTag(string tag)
+        {
+          return  _getMethods.SearchByTag(tag);
+        }
+
+        public List<PocketItem> Search(string searchString, bool searchInUri = true)
+        {
+            return _getMethods.Search(searchString, searchInUri);
+        }
+
+        public List<PocketItem> Search(List<PocketItem> availableItems, string searchString)
+        {
+            return _getMethods.Search(availableItems, searchString);
+        }
+
+        public bool Archive(int itemID)
+        {
+            return _modifyMethods.Archive(itemID);
+        }
+
+        public bool Archive(PocketItem item)
+        {
+            return _modifyMethods.Archive(item);
+        }
+
+        public bool Unarchive(int itemID)
+        {
+            return _modifyMethods.Unarchive(itemID);
+        }
+
+        public bool Unarchive(PocketItem item)
+        {
+            return _modifyMethods.Unarchive(item);
+        }
+
+        public bool Favorite(int itemID)
+        {
+            return _modifyMethods.Favorite(itemID);
+        }
+
+        public bool Favorite(PocketItem item)
+        {
+            return _modifyMethods.Favorite(item);
+        }
+
+        public bool Unfavorite(int itemID)
+        {
+            return _modifyMethods.Unfavorite(itemID);
+        }
+
+        public bool Unfavorite(PocketItem item)
+        {
+            return _modifyMethods.Unfavorite(item);
+        }
+
+        public bool Delete(int itemID)
+        {
+            return _modifyMethods.Delete(itemID);
+        }
+
+        public bool Delete(PocketItem item)
+        {
+            return _modifyMethods.Delete(item);
+        }
+
+        public bool AddTags(int itemID, string[] tags)
+        {
+            return _modifyTagMethods.AddTags(itemID, tags);
+        }
+
+        public bool AddTags(PocketItem item, string[] tags)
+        {
+            return _modifyTagMethods.AddTags(item, tags);
+        }
+
+        public bool RemoveTags(int itemID, string[] tags)
+        {
+            return _modifyTagMethods.RemoveTags(itemID, tags);
+        }
+
+        public bool RemoveTags(PocketItem item, string[] tags)
+        {
+            return _modifyTagMethods.RemoveTags(item, tags);
+        }
+
+        public bool RemoveTag(int itemID, string tag)
+        {
+            return _modifyTagMethods.RemoveTag(itemID, tag);
+        }
+
+        public bool RemoveTag(PocketItem item, string tag)
+        {
+            return _modifyTagMethods.RemoveTag(item, tag);
+        }
+
+        public bool RemoveTags(int itemID)
+        {
+            return _modifyTagMethods.RemoveTags(itemID);
+        }
+
+        public bool RemoveTags(PocketItem item)
+        {
+            return _modifyTagMethods.RemoveTags(item);
+        }
+
+        public bool ReplaceTags(int itemID, string[] tags)
+        {
+            return _modifyTagMethods.ReplaceTags(itemID, tags);
+        }
+
+        public bool ReplaceTags(PocketItem item, string[] tags)
+        {
+            return _modifyTagMethods.ReplaceTags(item, tags);
+        }
+
+        public bool RenameTag(int itemID, string oldTag, string newTag)
+        {
+            return _modifyTagMethods.RenameTag(itemID, oldTag, newTag);
+        }
+
+        public bool RenameTag(PocketItem item, string oldTag, string newTag)
+        {
+            return _modifyTagMethods.RenameTag(item, oldTag, newTag);
+        }
+
+        public PocketStatistics GetUserStatistics()
+        {
+            throw new NotImplementedException();
+        }
+
+        public PocketLimits GetUsageLimits()
+        {
+            throw new NotImplementedException();
         }
     }
 }

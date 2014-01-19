@@ -1,14 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using TascheAtWork.PocketAPI.Interfaces;
 using TascheAtWork.PocketAPI.Models;
 using TascheAtWork.PocketAPI.Models.Parameters;
 
-namespace TascheAtWork.PocketAPI
+namespace TascheAtWork.PocketAPI.Methods
 {
     /// <summary>
     /// PocketClient
     /// </summary>
-    public partial class ClientCore
+    public class ModifyTagMethods : IHandleModifyTags
     {
+        private readonly IInternalAPI _client;
+
+        public ModifyTagMethods(IInternalAPI client)
+        {
+            _client = client;
+        }
+
         /// <summary>
         /// Adds the specified tags to an item.
         /// </summary>
@@ -70,7 +77,7 @@ namespace TascheAtWork.PocketAPI
         /// <exception cref="PocketException"></exception>
         public bool RemoveTag(int itemID, string tag)
         {
-            return SendTags(itemID, "tags_remove", new string[] {tag});
+            return SendTags(itemID, "tags_remove", new string[] { tag });
         }
 
 
@@ -98,6 +105,20 @@ namespace TascheAtWork.PocketAPI
             return SendDefault(itemID, "tags_clear");
         }
 
+        /// <summary>
+        /// Puts an action
+        /// </summary>
+        /// <param name="itemID">The item ID.</param>
+        /// <param name="action">The action.</param>
+        /// <returns></returns>
+        private bool SendDefault(int itemID, string action)
+        {
+            return _client.Send(new ActionParameter()
+            {
+                Action = action,
+                ID = itemID
+            });
+        }
 
         /// <summary>
         /// Clears all tags from an item.
@@ -147,7 +168,7 @@ namespace TascheAtWork.PocketAPI
         /// <exception cref="PocketException"></exception>
         public bool RenameTag(int itemID, string oldTag, string newTag)
         {
-            return Send(new ActionParameter()
+            return _client.Send(new ActionParameter()
             {
                 Action = "tag_rename",
                 ID = itemID,
@@ -178,9 +199,9 @@ namespace TascheAtWork.PocketAPI
         /// <param name="action">The action.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        protected bool SendTags(int itemID, string action, string[] tags)
+        private bool SendTags(int itemID, string action, string[] tags)
         {
-            return Send(new ActionParameter()
+            return _client.Send(new ActionParameter()
             {
                 Action = action,
                 ID = itemID,

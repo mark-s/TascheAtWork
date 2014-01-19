@@ -22,7 +22,7 @@ namespace TascheAtWork.Shell
         private void Test()
         {
 
-            var client = new ClientCore(platformConsumerKey: "19717-4b69b3aeae8cf912108818c4", callbackUri: "http://localhost/authorizationFinished");
+            PocketAPIClient client = new PocketAPIClient(platformConsumerKey: "19717-4b69b3aeae8cf912108818c4", callbackUri: "http://localhost/authorizationFinished");
 
             client.GetRequestCode();
 
@@ -36,7 +36,7 @@ namespace TascheAtWork.Shell
 
             try
             {
-                List<PocketItem> items = client.Get(count: 100);
+                List<PocketItem> items = client.GetItems(count: 20);
 
 
                 foreach (var pocketItem in items)

@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using TascheAtWork.PocketAPI.Models;
-using TascheAtWork.PocketAPI.Models.Parameters;
-using TascheAtWork.PocketAPI.Models.Response;
 
-namespace TascheAtWork.PocketAPI
+namespace TascheAtWork.PocketAPI.Interfaces
 {
-    /// <summary>
-    /// PocketClient
-    /// </summary>
-    public partial class ClientCore
+    public interface IHandleAdd
     {
         /// <summary>
         /// Adds a new item to pocket
@@ -20,19 +14,6 @@ namespace TascheAtWork.PocketAPI
         /// <param name="tweetID">If you are adding Pocket support to a Twitter client, please send along a reference to the tweet status id. This allows Pocket to show the original tweet alongside the article.</param>
         /// <returns>A simple representation of the saved item which doesn't contain all data (is only returned by calling the Retrieve method)</returns>
         /// <exception cref="PocketException"></exception>
-        public PocketItem Add(Uri uri, string[] tags = null, string title = null, string tweetID = null)
-        {
-            AddParameters parameters = new AddParameters()
-            {
-                Uri = uri,
-                Tags = tags,
-                Title = title,
-                TweetID = tweetID
-            };
-
-            Add response = Request<Add>("add", parameters.ConvertToHTTPPostParameters());
-
-            return response.Item;
-        }
+        PocketItem AddItem(Uri uri, string[] tags = null, string title = null, string tweetID = null);
     }
 }
