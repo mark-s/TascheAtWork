@@ -9,7 +9,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Archive(int itemID);
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Archive(PocketItem item);
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Unarchive(int itemID);
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Unarchive(PocketItem item);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Favorite(int itemID);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Favorite(PocketItem item);
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Unfavorite(int itemID);
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Unfavorite(PocketItem item);
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         bool Delete(int itemID);
 
         /// <summary>

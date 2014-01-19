@@ -37,7 +37,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="count">The count.</param>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> GetItems(
             State? state = null,
             bool? favorite = null,
@@ -78,7 +78,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public PocketItem GetItem(int itemID)
         {
             List<PocketItem> items = GetItems(
@@ -94,7 +94,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> GetItems(RetrieveFilter filter)
         {
             RetrieveParameters parameters = new RetrieveParameters();
@@ -137,7 +137,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// Note: The Pocket API contains no method, which allows to retrieve all tags, so all items are retrieved and the associated tags extracted.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketTag> GetTags()
         {
             List<PocketItem> items = GetItems(
@@ -157,7 +157,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> SearchByTag(string tag)
         {
             return GetItems(tag: tag);
@@ -170,7 +170,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="searchString">The search string.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Search string length has to be a minimum of 2 chars</exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> Search(string searchString, bool searchInUri = true)
         {
             List<PocketItem> items = GetItems(RetrieveFilter.All);
@@ -186,7 +186,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="searchString">The search string.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Search string length has to be a minimum of 2 chars</exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> Search(List<PocketItem> availableItems, string searchString)
         {
             if (searchString.Length < 2)

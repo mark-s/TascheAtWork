@@ -5,7 +5,7 @@ namespace TascheAtWork.PocketAPI
   /// <summary>
   /// custom Pocket API Exceptions
   /// </summary>
-  public class PocketException : Exception
+  public class PocketAPIException : Exception
   {
     /// <summary>
     /// Gets or sets the pocket error code.
@@ -25,23 +25,23 @@ namespace TascheAtWork.PocketAPI
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PocketException"/> class.
+    /// Initializes a new instance of the <see cref="PocketAPIException"/> class.
     /// </summary>
-    public PocketException() { }
+    public PocketAPIException() { }
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PocketException"/> class.
+    /// Initializes a new instance of the <see cref="PocketAPIException"/> class.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    public PocketException(string message): base(message) { }
+    public PocketAPIException(string message): base(message) { }
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PocketException"/> class.
+    /// Initializes a new instance of the <see cref="PocketAPIException"/> class.
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-    public PocketException(string message, Exception innerException) : base(message, innerException) { }
+    public PocketAPIException(string message, Exception innerException) : base(message, innerException) { }
   }
 }

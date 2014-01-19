@@ -27,7 +27,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.NullReferenceException">Authentication methods need a callbackUri on initialization of the PocketClient class</exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public string GetRequestCode()
         {
             // check if request code is available
@@ -122,7 +122,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// or
         /// Invalid password.
         /// </exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RegisterAccount(string username, string email, string password)
         {
             if (username == null || email == null || password == null)

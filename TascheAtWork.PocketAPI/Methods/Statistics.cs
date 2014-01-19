@@ -21,7 +21,7 @@
 //        /// Statistics from the user account.
 //        /// </summary>
 //        /// <returns></returns>
-//        /// <exception cref="PocketException"></exception>
+//        /// <exception cref="PocketAPIException"></exception>
 //        public PocketStatistics GetUserStatistics()
 //        {
 //            return Request<PocketStatistics>("stats");
@@ -32,7 +32,7 @@
 //        /// Statistics from the user account.
 //        /// </summary>
 //        /// <returns></returns>
-//        /// <exception cref="PocketException"></exception>
+//        /// <exception cref="PocketAPIException"></exception>
 //        [Obsolete("Please use GetUserStatistics instead")]
 //        public PocketStatistics Statistics()
 //        {
@@ -46,7 +46,7 @@
 //        /// Note: This method only works for authenticated users with a given AccessCode.
 //        /// </summary>
 //        /// <returns></returns>
-//        /// <exception cref="PocketException"></exception>
+//        /// <exception cref="PocketAPIException"></exception>
 //        public PocketLimits GetUsageLimits()
 //        {
 //            string rateLimitForConsumerKey = TryGetHeaderValue(_sessionData.CachedHeaders, "X-Limit-Key-Limit");

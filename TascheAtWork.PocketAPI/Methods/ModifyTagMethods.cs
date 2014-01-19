@@ -22,7 +22,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="itemID">The item ID.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool AddTags(int itemID, string[] tags)
         {
             return SendTags(itemID, "tags_add", tags);
@@ -35,7 +35,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="item">The item.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool AddTags(PocketItem item, string[] tags)
         {
             return AddTags(item.ID, tags);
@@ -48,7 +48,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="itemID">The item ID.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTags(int itemID, string[] tags)
         {
             return SendTags(itemID, "tags_remove", tags);
@@ -61,7 +61,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="item">The item.</param>
         /// <param name="tags">The tag.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTags(PocketItem item, string[] tags)
         {
             return RemoveTags(item.ID, tags);
@@ -74,7 +74,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="itemID">The item ID.</param>
         /// <param name="tags">The tag.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTag(int itemID, string tag)
         {
             return SendTags(itemID, "tags_remove", new string[] { tag });
@@ -87,7 +87,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="item">The item.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTag(PocketItem item, string tag)
         {
             return RemoveTag(item.ID, tag);
@@ -99,7 +99,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTags(int itemID)
         {
             return SendDefault(itemID, "tags_clear");
@@ -125,7 +125,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RemoveTags(PocketItem item)
         {
             return RemoveTags(item.ID);
@@ -138,7 +138,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="itemID">The item ID.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool ReplaceTags(int itemID, string[] tags)
         {
             return SendTags(itemID, "tags_replace", tags);
@@ -151,7 +151,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="item">The item.</param>
         /// <param name="tags">The tags.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool ReplaceTags(PocketItem item, string[] tags)
         {
             return ReplaceTags(item.ID, tags);
@@ -165,7 +165,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="oldTag">The old tag.</param>
         /// <param name="newTag">The new tag name.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RenameTag(int itemID, string oldTag, string newTag)
         {
             return _client.Send(new ActionParameter()
@@ -185,7 +185,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="oldTag">The old tag.</param>
         /// <param name="newTag">The new tag name.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         public bool RenameTag(PocketItem item, string oldTag, string newTag)
         {
             return RenameTag(item.ID, oldTag, newTag);

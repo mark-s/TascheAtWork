@@ -8,7 +8,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// Statistics from the user account.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         PocketStatistics GetUserStatistics();
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// Note: This method only works for authenticated users with a given AccessCode.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         PocketLimits GetUsageLimits();
     }
 }

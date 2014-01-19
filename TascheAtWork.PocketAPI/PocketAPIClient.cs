@@ -82,12 +82,12 @@ namespace TascheAtWork.PocketAPI
         /// <param name="parameters">Additional POST parameters</param>
         /// <param name="requireAuth">if set to <c>true</c> [require auth].</param>
         /// <returns></returns>
-        /// <exception cref="PocketException">No access token available. Use authentification first.</exception>
+        /// <exception cref="PocketAPIException">No access token available. Use authentification first.</exception>
         public T Request<T>(string method, Dictionary<string, string> parameters = null, bool requireAuth = true) where T : class, new()
         {
             if (requireAuth && _pocketSession.AccessCode == null)
             {
-                throw new PocketException("SDK error: No access token available. Use authentification first.");
+                throw new PocketAPIException("SDK error: No access token available. Use authentification first.");
             }
 
             // every single Pocket API endpoint requires HTTP POST data
@@ -120,7 +120,7 @@ namespace TascheAtWork.PocketAPI
             }
             catch (HttpRequestException exc)
             {
-                throw new PocketException(exc.Message, exc);
+                throw new PocketAPIException(exc.Message, exc);
             }
 
             // validate HTTP response
@@ -138,7 +138,7 @@ namespace TascheAtWork.PocketAPI
             var parsedResponse = JsonConvert.DeserializeObject<T>(responseString,
                                                                                       new JsonSerializerSettings
                                                                                       {
-                                                                                          Error = (sender, args) => { throw new PocketException(String.Format("Parse error: {0}", args.ErrorContext.Error.Message)); },
+                                                                                          Error = (sender, args) => { throw new PocketAPIException(String.Format("Parse error: {0}", args.ErrorContext.Error.Message)); },
                                                                                           Converters =
                                                                                                               {
                                                                                                                 new BoolConverter(),
@@ -188,7 +188,7 @@ namespace TascheAtWork.PocketAPI
         /// </summary>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException">
+        /// <exception cref="PocketAPIException">
         /// Error retrieving response
         /// </exception>
         protected void ValidateResponse(HttpResponseMessage response)
@@ -216,7 +216,7 @@ namespace TascheAtWork.PocketAPI
             }
 
             // create exception
-            var exception = new PocketException(exceptionString);
+            var exception = new PocketAPIException(exceptionString);
 
             if (containsError)
             {

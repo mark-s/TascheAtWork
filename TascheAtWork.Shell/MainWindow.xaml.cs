@@ -50,7 +50,7 @@ namespace TascheAtWork.Shell
 
 
             }
-            catch (PocketException ex)
+            catch (PocketAPIException ex)
             {
                 Debug.Write(ex.Message);
             }

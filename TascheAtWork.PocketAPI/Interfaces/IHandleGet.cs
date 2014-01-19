@@ -23,7 +23,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// <param name="count">The count.</param>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketItem> GetItems(
             State? state = null,
             bool? favorite = null,
@@ -43,7 +43,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="itemID">The item ID.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         PocketItem GetItem(int itemID);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketItem> GetItems(RetrieveFilter filter);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// Note: The Pocket API contains no method, which allows to retrieve all tags, so all items are retrieved and the associated tags extracted.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketTag> GetTags();
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <returns></returns>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketItem> SearchByTag(string tag);
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// <param name="searchString">The search string.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Search string length has to be a minimum of 2 chars</exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketItem> Search(string searchString, bool searchInUri = true);
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace TascheAtWork.PocketAPI.Interfaces
         /// <param name="searchString">The search string.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Search string length has to be a minimum of 2 chars</exception>
-        /// <exception cref="PocketException"></exception>
+        /// <exception cref="PocketAPIException"></exception>
         List<PocketItem> Search(List<PocketItem> availableItems, string searchString);
     }
 }
