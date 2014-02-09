@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using MahApps.Metro.Controls;
 using TascheAtWork.PocketAPI;
 using TascheAtWork.PocketAPI.Models;
@@ -15,38 +17,36 @@ namespace TascheAtWork.Shell
         {
             InitializeComponent();
             Test();
+            DataContext = this;
         }
         
         private readonly List<Site>  Sites = new List<Site>();
 
         private void Test()
         {
-
-            PocketAPIClient client = new PocketAPIClient(platformConsumerKey: "19717-4b69b3aeae8cf912108818c4", callbackUri: "http://localhost/authorizationFinished");
+            // "http://localhost/authorizationFinished"
+            var client = new PocketAPIClient(callbackUri: "#");
 
             client.GetRequestCode();
 
             var urlForAccessConfirm = client.GenerateAuthenticationUri();
 
             Process.Start(urlForAccessConfirm.AbsoluteUri);
-
-
+            
             var usr = client.GetUser();
+            
+
 
 
             try
             {
-                List<PocketItem> items = client.GetItems(count: 20);
-
-
-                foreach (var pocketItem in items)
-                {
-                    if (pocketItem.Uri != null)
-                    {
-                        Sites.Add(new Site() {Content = pocketItem.Title, Url = pocketItem.Uri.AbsoluteUri});
-                    }
-
-                }
+                Task.Factory.StartNew(() => client.GetItems(count: 20))
+                                 .ContinueWith(t1 =>
+                                 {
+                                     foreach (var pocketItem in t1.Result.Where(pocketItem => pocketItem.Uri != null))
+                                         Sites.Add(new Site() {Content = pocketItem.Title, Url = pocketItem.Uri.AbsoluteUri});
+                                 });
+             
 
 
             }

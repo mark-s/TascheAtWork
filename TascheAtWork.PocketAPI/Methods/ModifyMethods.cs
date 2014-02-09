@@ -144,11 +144,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <returns></returns>
         private bool SendDefault(int itemID, string action)
         {
-            return _client.Send(new ActionParameter()
-            {
-                Action = action,
-                ID = itemID
-            });
+            return _client.Send(new ActionParameter { Action = action, ID = itemID });
         }
     }
 }

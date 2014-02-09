@@ -25,6 +25,8 @@
 
             <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.MainRegion}" />
 
+            <ListBox ItemsSource="{Binding Sites}" />
+
         </DockPanel>
     </Border>
 </controls:MetroWindow>

@@ -16,7 +16,7 @@ namespace TascheAtWork.PocketAPI.Helpers
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-      return reader.Value == null ? false : (reader.Value.ToString() == "1");
+      return reader.Value != null && (reader.Value.ToString() == "1");
     }
 
     public override bool CanConvert(Type objectType)
@@ -26,31 +26,7 @@ namespace TascheAtWork.PocketAPI.Helpers
   }
 
 
-
-  public class UnixDateTimeConverter : DateTimeConverterBase
-  {
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-    {
-      DateTime epoc = new DateTime(1970, 1, 1);
-      var delta = (DateTime)value - epoc;
-
-      writer.WriteValue((long)delta.TotalSeconds);
-    }
-
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    {
-      if(reader.Value.ToString() == "0")
-      {
-        return null;
-      }
-
-      return new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(reader.Value)).ToLocalTime();
-    }
-  }
-
-
-
-  public class NullableIntConverter : JsonConverter
+    public class NullableIntConverter : JsonConverter
   {
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {

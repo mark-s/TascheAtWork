@@ -14,7 +14,7 @@ namespace TascheAtWork.PocketAPI.Models.Response
     /// <value>
     /// The action results.
     /// </value>
-    //[JsonProperty("action_results")]
-    //public bool[] ActionResults { get; set; }
+    [JsonProperty("action_results")]
+    public bool[] ActionResults { get; set; }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PropertyChanged;
 
 
 namespace TascheAtWork.PocketAPI.Models
@@ -8,6 +9,7 @@ namespace TascheAtWork.PocketAPI.Models
   /// Image
   /// </summary>
   [JsonObject]
+  [ImplementPropertyChanged]
   public class PocketImage
   {
     /// <summary>

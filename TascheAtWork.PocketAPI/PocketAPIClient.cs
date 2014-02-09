@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using TascheAtWork.Core.Services;
 using TascheAtWork.PocketAPI.Helpers;
 using TascheAtWork.PocketAPI.Interfaces;
 using TascheAtWork.PocketAPI.Methods;
 using TascheAtWork.PocketAPI.Models;
 using TascheAtWork.PocketAPI.Models.Parameters;
 using TascheAtWork.PocketAPI.Models.Response;
+using TascheAtWork.PocketAPI.Properties;
 
 namespace TascheAtWork.PocketAPI
 {
     public class PocketAPIClient : IPocketClient, IInternalAPI
     {
-        private readonly IPocketAPISession _pocketSession = new PocketSessionData();
+        private readonly IPocketAPISession _pocketSession = new PocketSessionData(new SettingsProvider());
+
         private readonly HttpClient _webClient;
 
         private readonly IHandleAdd _addMethods;
@@ -24,21 +28,10 @@ namespace TascheAtWork.PocketAPI
         private readonly IHandleModify _modifyMethods;
         private readonly IHandleModifyTags _modifyTagMethods;
 
-        /// <summary>
-        /// Caches HTTP headers from last response
-        /// </summary>
-        private HttpResponseHeaders _cachedHeaders;
-
-        /// <summary>
-        /// The base URL for the Pocket API
-        /// </summary>
-        private readonly Uri _pocketAPIBaseUri = new Uri("https://getpocket.com/v3/");
-
-
         /// <param name="platformConsumerKey">The API key</param>
         /// <param name="accessCode">Provide an access code if the user is already authenticated</param>
         /// <param name="callbackUri">The callback URL is called by Pocket after authentication</param>
-        public PocketAPIClient(string platformConsumerKey, string accessCode = null, string callbackUri = null)
+        public PocketAPIClient(string platformConsumerKey = null, string accessCode = null, string callbackUri = null)
         {
 
             _addMethods = new AddMethods(this);
@@ -47,15 +40,18 @@ namespace TascheAtWork.PocketAPI
             _modifyMethods = new ModifyMethods(this);
             _modifyTagMethods = new ModifyTagMethods(this);
 
-            // assign public properties
-            _pocketSession.PlatformConsumerKey = platformConsumerKey;
+
+            if (String.IsNullOrEmpty(platformConsumerKey))
+                _pocketSession.PlatformConsumerKey = Resources.PocketApiPlatformConsumerKey;
+            else
+                _pocketSession.PlatformConsumerKey = platformConsumerKey;
 
             // assign access code if submitted
             if (accessCode != null)
                 _pocketSession.AccessCode = accessCode;
 
             // assign callback uri if submitted
-            if (callbackUri != null)
+            if (String.IsNullOrEmpty(callbackUri) == false)
                 _pocketSession.AuthenticationCallbackUri = Uri.EscapeUriString(callbackUri);
 
             var httpClientHandler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip };
@@ -64,7 +60,7 @@ namespace TascheAtWork.PocketAPI
             _webClient = new HttpClient(httpClientHandler);
 
             // set the base uri
-            _webClient.BaseAddress = _pocketAPIBaseUri;
+            _webClient.BaseAddress = new Uri(Resources.PocketApiBaseUri);
 
             // Pocket needs this specific Accept header 
             _webClient.DefaultRequestHeaders.Add("Accept", "*/*");
@@ -126,9 +122,6 @@ namespace TascheAtWork.PocketAPI
             // validate HTTP response
             ValidateResponse(response);
 
-            // cache headers
-            _cachedHeaders = response.Headers;
-
             // read response
             var responseString = response.Content.ReadAsStringAsync().Result;
 
@@ -158,16 +151,11 @@ namespace TascheAtWork.PocketAPI
         /// <returns></returns>
         public bool Send(List<ActionParameter> actionParameters)
         {
-            List<Dictionary<string, object>> actionParamList = new List<Dictionary<string, object>>();
+            var actionParamList = actionParameters.Select(action => action.Convert()).ToList();
 
-            foreach (var action in actionParameters)
-            {
-                actionParamList.Add(action.Convert());
-            }
+            var parameters = new Dictionary<string, string> { { "actions", JsonConvert.SerializeObject(actionParamList) } };
 
-            Dictionary<string, string> parameters = new Dictionary<string, string>() { { "actions", JsonConvert.SerializeObject(actionParamList) } };
-
-            ModifyResponse response = Request<ModifyResponse>("send", parameters);
+            var response = Request<ModifyResponse>("send", parameters);
 
             return response.Status;
         }
@@ -179,7 +167,7 @@ namespace TascheAtWork.PocketAPI
         /// <returns></returns>
         public bool Send(ActionParameter actionParameter)
         {
-            bool response = Send(new List<ActionParameter>() { actionParameter });
+            var response = Send(new List<ActionParameter>() { actionParameter });
             return response;
         }
 
@@ -316,7 +304,7 @@ namespace TascheAtWork.PocketAPI
 
         public List<PocketItem> SearchByTag(string tag)
         {
-          return  _getMethods.SearchByTag(tag);
+            return _getMethods.SearchByTag(tag);
         }
 
         public List<PocketItem> Search(string searchString, bool searchInUri = true)

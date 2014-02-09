@@ -38,35 +38,33 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
         /// <exception cref="PocketAPIException"></exception>
-        public List<PocketItem> GetItems(
-            State? state = null,
-            bool? favorite = null,
-            string tag = null,
-            ContentType? contentType = null,
-            Sort? sort = null,
-            string search = null,
-            string domain = null,
-            DateTime? since = null,
-            int? count = null,
-            int? offset = null
-            )
+        public List<PocketItem> GetItems(State? state = null,
+                                                        bool? favorite = null,
+                                                        string tag = null,
+                                                        ContentType? contentType = null,
+                                                        Sort? sort = null,
+                                                        string search = null,
+                                                        string domain = null,
+                                                        DateTime? since = null,
+                                                        int? count = null,
+                                                        int? offset = null)
         {
-            RetrieveParameters parameters = new RetrieveParameters()
-            {
-                State = state,
-                Favorite = favorite,
-                Tag = tag,
-                ContentType = contentType,
-                Sort = sort,
-                DetailType = DetailType.complete,
-                Search = search,
-                Domain = domain,
-                Since = since,
-                Count = count,
-                Offset = offset
-            };
+            var parameters = new RetrieveParameters
+                                                {
+                                                    State = state,
+                                                    Favorite = favorite,
+                                                    Tag = tag,
+                                                    ContentType = contentType,
+                                                    Sort = sort,
+                                                    DetailType = DetailType.complete,
+                                                    Search = search,
+                                                    Domain = domain,
+                                                    Since = since,
+                                                    Count = count,
+                                                    Offset = offset
+                                                };
 
-            RetrieveResponse response = _client.Request<RetrieveResponse>("get", parameters.ConvertToHTTPPostParameters());
+            var response = _client.Request<RetrieveResponse>("get", parameters.ConvertToHTTPPostParameters());
 
             return response.Items;
         }
@@ -81,11 +79,8 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <exception cref="PocketAPIException"></exception>
         public PocketItem GetItem(int itemID)
         {
-            List<PocketItem> items = GetItems(
-                state: State.all
-                );
-
-            return items.SingleOrDefault<PocketItem>(item => item.ID == itemID);
+            var items = GetItems(state: State.all);
+            return items.SingleOrDefault(item => item.ID == itemID);
         }
 
 
@@ -97,7 +92,7 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> GetItems(RetrieveFilter filter)
         {
-            RetrieveParameters parameters = new RetrieveParameters();
+            var parameters = new RetrieveParameters();
 
             switch (filter)
             {
@@ -140,15 +135,13 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <exception cref="PocketAPIException"></exception>
         public List<PocketTag> GetTags()
         {
-            List<PocketItem> items = GetItems(
-                state: State.all
-                );
+            var items = GetItems(state: State.all);
 
             return items.Where(item => item.Tags != null)
-                .SelectMany(item => item.Tags)
-                .GroupBy(item => item.Name)
-                .Select(item => item.First())
-                .ToList<PocketTag>();
+                            .SelectMany(item => item.Tags)
+                            .GroupBy(item => item.Name)
+                            .Select(item => item.First())
+                            .ToList();
         }
 
 
@@ -168,13 +161,13 @@ namespace TascheAtWork.PocketAPI.Methods
         /// Retrieves items which match the specified search string in title and URI
         /// </summary>
         /// <param name="searchString">The search string.</param>
+        /// <param name="searchInUri"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Search string length has to be a minimum of 2 chars</exception>
         /// <exception cref="PocketAPIException"></exception>
         public List<PocketItem> Search(string searchString, bool searchInUri = true)
         {
-            List<PocketItem> items = GetItems(RetrieveFilter.All);
-
+            var items = GetItems(RetrieveFilter.All);
             return Search(items, searchString);
         }
 
@@ -190,14 +183,15 @@ namespace TascheAtWork.PocketAPI.Methods
         public List<PocketItem> Search(List<PocketItem> availableItems, string searchString)
         {
             if (searchString.Length < 2)
-            {
                 throw new ArgumentOutOfRangeException("Search string length has to be a minimum of 2 chars");
-            }
 
-            return availableItems.Where(item => (
-                (!String.IsNullOrEmpty(item.FullTitle) && item.FullTitle.ToLower().Contains(searchString))
-                || item.Uri.ToString().ToLower().Contains(searchString)
-                )).ToList();
+            var strSearch = searchString.ToUpperInvariant();
+
+            return availableItems.Where(item =>
+                                                    (
+                                                    (!String.IsNullOrEmpty(item.FullTitle) && item.FullTitle.ToUpperInvariant().Contains(strSearch))
+                                                    || item.Uri.ToString().ToUpperInvariant().Contains(strSearch))
+                                                  ).ToList(); 
         }
     }
 }

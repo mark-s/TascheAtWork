@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PropertyChanged;
 
 namespace TascheAtWork.PocketAPI.Models
 {
@@ -7,6 +8,7 @@ namespace TascheAtWork.PocketAPI.Models
   /// Video
   /// </summary>
   [JsonObject]
+  [ImplementPropertyChanged]
   public class PocketVideo
   {
     /// <summary>

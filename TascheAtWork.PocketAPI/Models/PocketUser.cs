@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PropertyChanged;
 
 namespace TascheAtWork.PocketAPI.Models
 {
@@ -6,6 +7,7 @@ namespace TascheAtWork.PocketAPI.Models
   /// Access Code
   /// </summary>
   [JsonObject]
+  [ImplementPropertyChanged]
   public class PocketUser
   {
     /// <summary>

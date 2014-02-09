@@ -15,6 +15,6 @@ namespace TascheAtWork.PocketAPI.Models.Response
     ///   <c>true</c> if status is OK; otherwise, <c>false</c>.
     /// </value>
     [JsonProperty("status")]
-    public bool Status { get; set; }
+      public bool Status { get; set; }
   }
 }

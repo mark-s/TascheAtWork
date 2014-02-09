@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TascheAtWork.PocketAPI.Models;
 
 namespace TascheAtWork.PocketAPI.Interfaces

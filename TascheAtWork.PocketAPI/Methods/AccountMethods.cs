@@ -31,16 +31,11 @@ namespace TascheAtWork.PocketAPI.Methods
         public string GetRequestCode()
         {
             // check if request code is available
-            if (_sessionData.AuthenticationCallbackUri == null)
-            {
+            if (  String.IsNullOrEmpty(_sessionData.AuthenticationCallbackUri))
                 throw new NullReferenceException("Authentication methods need a callbackUri on initialization of the PocketClient class");
-            }
 
             // do request
-            RequestCodeResponse response = _client.Request<RequestCodeResponse>("oauth/request", new Dictionary<string, string>()
-            {
-                {"redirect_uri", _sessionData.AuthenticationCallbackUri}
-            }, false);
+            var response = _client.Request<RequestCodeResponse>("oauth/request", new Dictionary<string, string> { { "redirect_uri", _sessionData.AuthenticationCallbackUri } }, false);
 
             // save code to client
             _sessionData.RequestCode = response.Code;
@@ -59,13 +54,11 @@ namespace TascheAtWork.PocketAPI.Methods
         public Uri GenerateAuthenticationUri(string requestCode = null)
         {
             // check if request code is available
-            if (_sessionData.RequestCode == null && requestCode == null)
-            {
+            if (string.IsNullOrEmpty(_sessionData.RequestCode) && string.IsNullOrEmpty(requestCode))
                 throw new NullReferenceException("Call GetRequestCode() first to receive a request_code");
-            }
 
             // override property with given param if available
-            if (requestCode != null)
+            if (string.IsNullOrEmpty(requestCode) == false)
                 _sessionData.RequestCode = requestCode;
 
             return new Uri(string.Format(_sessionData.AuthentificationUri, _sessionData.RequestCode, _sessionData.AuthenticationCallbackUri));
@@ -82,22 +75,15 @@ namespace TascheAtWork.PocketAPI.Methods
         public PocketUser GetUser(string requestCode = null)
         {
             // check if request code is available
-            if (_sessionData.RequestCode == null && requestCode == null)
-            {
+            if (string.IsNullOrEmpty(_sessionData.RequestCode) && string.IsNullOrEmpty(requestCode))
                 throw new NullReferenceException("Call GetRequestCode() first to receive a request_code");
-            }
 
             // override property with given param if available
-            if (requestCode != null)
-            {
+            if (string.IsNullOrEmpty(requestCode) == false)
                 _sessionData.RequestCode = requestCode;
-            }
 
             // do request
-            PocketUser response = _client.Request<PocketUser>("oauth/authorize", new Dictionary<string, string>()
-            {
-                {"code", _sessionData.RequestCode}
-            }, false);
+            var response = _client.Request<PocketUser>("oauth/authorize", new Dictionary<string, string> {{"code", _sessionData.RequestCode}}, false);
 
             // save code to client
             _sessionData.AccessCode = response.Code;
@@ -126,36 +112,28 @@ namespace TascheAtWork.PocketAPI.Methods
         public bool RegisterAccount(string username, string email, string password)
         {
             if (username == null || email == null || password == null)
-            {
                 throw new ArgumentNullException("All parameters are required");
-            }
 
-            Match matchEmail = Regex.Match(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,10}))$");
-            Match matchUsername = Regex.Match(username, @"^([\w\-_]{1,20})$");
+            var matchEmail = Regex.Match(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,10}))$");
+            var matchUsername = Regex.Match(username, @"^([\w\-_]{1,20})$");
 
-            if (!matchEmail.Success)
-            {
+            if (matchEmail.Success == false)
                 throw new FormatException("(1) Invalid email address.");
-            }
 
-            if (!matchUsername.Success)
-            {
+            if (matchUsername.Success == false)
                 throw new FormatException("(2) Invalid username. Please only use letters, numbers, and/or dashes and between 1-20 characters.");
-            }
 
             if (password.Length < 3)
-            {
                 throw new FormatException("(3) Invalid password.");
-            }
 
-            RegisterParameters parameters = new RegisterParameters()
-            {
-                Username = username,
-                Email = email,
-                Password = password
-            };
+            var parameters = new RegisterParameters
+                                            {
+                                                Username = username,
+                                                Email = email,
+                                                Password = password
+                                            };
 
-            ResponseBase response = _client.Request<ResponseBase>("signup", parameters.ConvertToHTTPPostParameters(), false);
+            var response = _client.Request<ResponseBase>("signup", parameters.ConvertToHTTPPostParameters(), false);
 
             return response.Status;
         }

@@ -29,15 +29,15 @@ namespace TascheAtWork.PocketAPI.Methods
         /// <exception cref="PocketAPIException"></exception>
         public PocketItem AddItem(Uri uri, string[] tags = null, string title = null, string tweetID = null)
         {
-            AddParameters parameters = new AddParameters()
-            {
-                Uri = uri,
-                Tags = tags,
-                Title = title,
-                TweetID = tweetID
-            };
+            var parameters = new AddParameters
+                                            {
+                                                Uri = uri,
+                                                Tags = tags,
+                                                Title = title,
+                                                TweetID = tweetID
+                                            };
 
-            AddResponse response = _client.Request<AddResponse>("add", parameters.ConvertToHTTPPostParameters());
+            var response = _client.Request<AddResponse>("add", parameters.ConvertToHTTPPostParameters());
 
             return response.Item;
         }

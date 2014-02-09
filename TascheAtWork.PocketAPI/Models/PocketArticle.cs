@@ -1,10 +1,12 @@
 ﻿using System;
+using PropertyChanged;
 
 namespace TascheAtWork.PocketAPI.Models
 {
   /// <summary>
   /// Readable article
   /// </summary>
+  [ImplementPropertyChanged]
   public class PocketArticle
   {
     /// <summary>

@@ -23,12 +23,11 @@ namespace TascheAtWork.PocketAPI.Models.Parameters
             var parameterDict = new Dictionary<string, string>();
 
             // get object properties
-            IEnumerable<PropertyInfo> properties = this.GetType()
-                                                                              .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                                                              .Where(p => Attribute.IsDefined(p, typeof(DataMemberAttribute)));
+            var properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                                      .Where(p => Attribute.IsDefined(p, typeof(DataMemberAttribute)));
 
             // gather attributes of object
-            foreach (PropertyInfo propertyInfo in properties)
+            foreach (var propertyInfo in properties)
             {
                 var attribute = (DataMemberAttribute)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false).FirstOrDefault();
 

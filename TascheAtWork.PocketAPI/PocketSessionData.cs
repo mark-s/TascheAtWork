@@ -1,14 +1,16 @@
-﻿using System;
-using System.Net.Http.Headers;
+﻿using TascheAtWork.Core.Infrastructure;
+using TascheAtWork.Core.Services;
 using TascheAtWork.PocketAPI.Interfaces;
 
 namespace TascheAtWork.PocketAPI
 {
     public class PocketSessionData : IPocketAPISession
     {
+        private ISettingsProvider _settingsProvider;
 
-        public PocketSessionData()
+        public PocketSessionData(ISettingsProvider settingsProvider)
         {
+            _settingsProvider = settingsProvider;
             AuthentificationUri = "https://getpocket.com/auth/authorize?request_token={0}&redirect_uri={1}";
         }
 
@@ -36,6 +38,10 @@ namespace TascheAtWork.PocketAPI
         /// <summary>
         /// Code retrieved on authentification-success
         /// </summary>
-        public string AccessCode { get; set; }
+        public string AccessCode
+        {
+            get { return _settingsProvider.Load(SettingsKey.AccessCode); }
+            set { _settingsProvider.Save(SettingsKey.AccessCode, value); }
+        }
     }
 }

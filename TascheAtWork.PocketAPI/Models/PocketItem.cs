@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using PropertyChanged;
 using TascheAtWork.PocketAPI.Helpers;
 
 namespace TascheAtWork.PocketAPI.Models
@@ -10,6 +11,7 @@ namespace TascheAtWork.PocketAPI.Models
   /// see: http://getpocket.com/developer/docs/v3/retrieve
   /// </summary>
   [JsonObject]
+  [ImplementPropertyChanged]
   public class PocketItem
   {
     /// <summary>
